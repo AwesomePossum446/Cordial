@@ -1,10 +1,15 @@
 import _ from 'lodash';
 
-function objectToStrings(obj) {
-	return _(Object.values(obj))
-					.filter((val) => typeof val === 'string')
-					.map(s => s.toLowerCase())
-					.value();
+function deepObjectToStrings(obj) {
+	return _.reduce(Object.values(obj), (acc, val) => {
+		if (typeof val === 'string') {
+			return [...acc, val.toLowerCase()];
+		} else if (_.isArray(val) || _.isObject(val)) {
+			return [...acc, ...deepObjectToStrings(val)];
+		} else {
+			return acc;
+		}
+	}, []);
 }
 
 function hammingFilter(collection, queryString, hammingThreshold) {
@@ -41,16 +46,17 @@ function hammingFilter(collection, queryString, hammingThreshold) {
 	}
 
 	return _.filter(collection, (obj) => (
-		scoreCandidate(objectToStrings(obj)) <= hammingThreshold
+		scoreCandidate(deepObjectToStrings(obj)) <= hammingThreshold
 	));
 }
 
 function strictFilter(collection, queryString) {
 	function doesMatch(query, tagList) {
+		console.log(tagList);
 		return _.some(tagList, (str) => str.indexOf(query) !== -1);
 	}
 
-	return _.filter(collection, (obj) => doesMatch(queryString, objectToStrings(obj)));
+	return _.filter(collection, (obj) => doesMatch(queryString, deepObjectToStrings(obj)));
 
 }
 
