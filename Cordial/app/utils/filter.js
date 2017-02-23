@@ -12,7 +12,7 @@ function hammingFilter(collection, queryString, hammingThreshold) {
 	// hamming distance of two equal length strings
 	function hammingDistance(s1, s2) {
 		return _(s1)
-			.map(s1, (char, i) => {
+			.map((char, i) => {
 				const code1 = char.charCodeAt(0);
 				const code2 = s2.charCodeAt(i);
 				return Math.abs(code1 - code2);
@@ -33,12 +33,16 @@ function hammingFilter(collection, queryString, hammingThreshold) {
 	}
 
 	// score a candidate based on it's best matching string
-	function scoreCandidate(query, tagList) {
-		return _(tagList)
-						.map((str) => minHammingDistance(query, str))
+	function scoreCandidate(tagList) {
+		res = _(tagList)
+						.map((str) => minHammingDistance(queryString, str))
 						.min();
+		return res;
 	}
-	return _.filter(collection, (obj) => scoreCandidate(objectToStrings(obj)) <= hammingThreshold);
+
+	return _.filter(collection, (obj) => (
+		scoreCandidate(objectToStrings(obj)) <= hammingThreshold
+	));
 }
 
 function strictFilter(collection, queryString) {
@@ -51,8 +55,9 @@ function strictFilter(collection, queryString) {
 }
 
 
-export default function filter(collection, queryString, options) {
-	const {useHamming, hammingThreshold} = options;
+export default function filter(collection, queryString, options = {}) {
+	queryString = queryString.toLowerCase();
+	const {useHamming, hammingThreshold = 0} = options;
 
 	if (useHamming) {
 		return hammingFilter(collection, queryString, hammingThreshold);
