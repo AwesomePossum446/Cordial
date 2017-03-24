@@ -12,6 +12,7 @@ import ContactsContainer from '../containers/contacts-container';
 import ContactContainer from '../containers/contact-container';
 import SettingsContainer from '../containers/settings-container';
 import QRCodeContainer from '../containers/qrcode-container';
+import NFCContainer from '../containers/nfc-container';
 import QRCodeScannerContainer from '../containers/qrcode-scanner-container';
 import WelcomeContainer from '../containers/welcome-container';
 import LoginContainer from '../containers/login-container';
@@ -84,6 +85,11 @@ const routes = Actions.create(
       key="qrcode"
       component={QRCodeContainer}
       title="QR Code"
+      hideNavBar={true} />
+    <Scene
+      key="nfc"
+      component={NFCContainer}
+      title="NFC Transfer"
       hideNavBar={true} />
     <Scene
         key="qrcodescanner"

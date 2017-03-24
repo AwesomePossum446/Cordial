@@ -9,6 +9,7 @@ import CordialModal from '../components/cordial-modal';
 import draftEmail from '../utils/emaildraft';
 import { lightBlue, brightBlue } from '../consts/styles';
 
+
 export default class SharingModal extends React.Component {
 	constructor(props) {
 		super(props);
@@ -16,6 +17,7 @@ export default class SharingModal extends React.Component {
 		this.shareCard = this.shareCard.bind(this);
 		this.sendEmail = this.sendEmail.bind(this);
 		this.openCamera = this.openCamera.bind(this);
+		this.transferNFC = this.transferNFC.bind(this);
 
 		this.sharingOptions = [
 			{
@@ -35,7 +37,7 @@ export default class SharingModal extends React.Component {
 			},
 			{
 				name: 'NFC',
-				onPress: this.shareCard, // TODO: change for NFC
+				onPress: this.transferNFC,
 				icon: 'share-alt-square'
 			},
 		];
@@ -54,6 +56,11 @@ export default class SharingModal extends React.Component {
 		const {id, displayName} = this.props.card;
 		this.props.onRequestClose();
 		Actions.qrcode({id, displayName});
+	}
+	transferNFC() {
+		const {card} = this.props;
+		this.props.onRequestClose();
+		Actions.nfc({card});
 	}
 	render() {
 		return (
