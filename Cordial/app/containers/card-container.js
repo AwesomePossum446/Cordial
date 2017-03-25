@@ -25,6 +25,8 @@ import {
 	brightBlue,
 	lightBlue,
 	paleBlue,
+	brightRed,
+	lightRed,
 	white,
 	FOOTER_HEIGHT
 } from '../consts/styles';
@@ -111,7 +113,7 @@ class CardContainer extends Component {
 		} = card;
 
 		const cards = Card.myCards();
-		
+
 		return (
 			<View style={[styles.cardContainer, {marginBottom: editMode ? 0 : FOOTER_HEIGHT}]}>
 				{ editMode  && !keyboardOpen &&
@@ -123,6 +125,15 @@ class CardContainer extends Component {
 						<Text style={styles.tileButtonText}>Cancel</Text>
 					</TileButton>
 				</View>
+				}
+				{!readOnly && !editMode &&
+					<TouchableOpacity
+						style={{zIndex: 1000, position: 'relative'}}
+						onPress={() => {console.log('clicked my cards');}}>
+						<View style={styles.myCards}>
+							<Text style={styles.myCardsText}>My Cards</Text>
+						</View>
+					</TouchableOpacity>
 				}
 				<DisplayPicture style={styles.displayPicture} uri={displayPhoto}/>
 				<View style={styles.displayPictureBorder}/>
@@ -140,11 +151,11 @@ class CardContainer extends Component {
 										<View style={styles.sharingPanel}>
 											<TouchableOpacity onPress={() => {this.shareCard(id, displayName);}}>
 												<View style={styles.shareOptionsButton}>
-													<Icon 
+													<Icon
 														style={styles.shareicon}
 														key={'qrcode'}
 														name={'qrcode'}
-														size={55}	
+														size={55}
 													/>
 													<View style={styles.shareTextButton}>
 														<Text style={styles.clickableShareText} >Share Card</Text>
@@ -153,7 +164,7 @@ class CardContainer extends Component {
 											</TouchableOpacity>
 											<TouchableOpacity onPress={() => {this.sendEmail(cards);}}>
 												<View style={styles.shareOptionsButton}>
-													<Icon 
+													<Icon
 														style={styles.shareicon}
 														key={'envelope'}
 														name={'envelope'}
@@ -166,11 +177,11 @@ class CardContainer extends Component {
 											</TouchableOpacity>
 											<TouchableOpacity onPress={() => {this.openCamera();}}>
 												<View style={styles.shareOptionsButton}>
-													<Icon 
+													<Icon
 														style={styles.shareicon}
 														key={'camera'}
 														name={'camera'}
-														size={55}	
+														size={55}
 													/>
 													<View style={styles.shareTextButton}>
 														<Text style={styles.clickableShareText} >Scan QR Code</Text>
@@ -179,11 +190,11 @@ class CardContainer extends Component {
 											</TouchableOpacity>
 											<TouchableOpacity onPress={() => {this.shareCard(id, displayName);}}>
 												<View style={styles.shareOptionsButton}>
-													<Icon 
+													<Icon
 														style={styles.shareicon}
 														key={'share-alt-square'}
 														name={'share-alt-square'}
-														size={55}	
+														size={55}
 													/>
 													<View style={styles.shareTextButton}>
 														<Text style={styles.clickableShareText} >NFC</Text>
@@ -214,6 +225,21 @@ class CardContainer extends Component {
 								</View>
 							</TouchableOpacity>
 						</View>
+					</View>
+				}
+				{!readOnly && editMode &&
+					<View style={styles.optionButtons}>
+						<TouchableOpacity	onPress={() => {console.log('clicked delete card');}}>
+							<View style={styles.deleteCard}>
+								<Text style={styles.deleteCardText}>Delete Card</Text>
+							</View>
+						</TouchableOpacity>
+						<TouchableOpacity	onPress={this.enableEdit}>
+							<View style={styles.editButton}>
+								<Icon style={styles.clickableIcon} color={brightBlue} size={20} name='pencil'/>
+								<Text style={styles.clickableText} >Edit</Text>
+							</View>
+						</TouchableOpacity>
 					</View>
 				}
 				<ProfilePicture
@@ -296,6 +322,9 @@ const styles = StyleSheet.create({
 		marginTop: profilePictureSize / -2 -10,
 		paddingHorizontal: 5,
 		flexDirection: 'row',
+	},
+	displayPicture: {
+		zIndex: 0
 	},
 	displayPictureBorder: { // I am sorry for these hax
 		borderWidth: 2, // borderBottomWidth doesn't seem to work
@@ -382,10 +411,10 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between'
 	},
-	modal: {	
-		flex: 1, 
-		flexDirection: 'column', 
-		justifyContent: 'center', 
+	modal: {
+		flex: 1,
+		flexDirection: 'column',
+		justifyContent: 'center',
 		alignItems: 'center',
 	},
 	closeButton:{
@@ -413,11 +442,45 @@ const styles = StyleSheet.create({
 		borderColor: brightBlue,
 		paddingRight: 20,
 		paddingLeft: 20
-
 	},
 	shareTextButton: {
 		alignItems:'center',
 		justifyContent: 'center'
+	},
+	myCards: {
+		position: 'absolute',
+		borderWidth: 1,
+		borderRadius: 8,
+		borderColor: brightBlue,
+		backgroundColor: lightBlue,
+		height: 25,
+		width: 100,
+		top: 25,
+		left: 10,
+		justifyContent: 'space-around',
+		overflow: 'hidden',
+		zIndex: 1000
+	},
+	myCardsText: {
+		fontSize: 12,
+		alignSelf: 'center'
+	},
+	deleteCard: {
+		flexDirection: 'row',
+		marginTop: 10,
+		marginLeft: 10,
+		borderWidth: 1,
+		borderRadius: 8,
+		borderColor: brightRed,
+		backgroundColor: lightRed,
+		height: 25,
+		width: 85,
+		justifyContent: 'space-around',
+		overflow: 'hidden',
+	},
+	deleteCardText: {
+		fontSize: 12,
+		alignSelf: 'center'
 	}
 
 });
