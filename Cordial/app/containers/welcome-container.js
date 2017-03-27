@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
+import { Actions, ActionConst } from 'react-native-router-flux';
 
 import StatusBarBackground from '../components/statusbar-background';
 import * as authActions from '../actions/auth';
@@ -45,9 +45,8 @@ class WelcomeContainer extends Component {
 
   _isLoggedIn() {
     // TODO: check for token in local storage
-    const { state } = this.props;
     if (User.me()) {
-      Actions.tabbar();
+      Actions.tabbar({type: ActionConst.REPLACE});
     }
   }
 
