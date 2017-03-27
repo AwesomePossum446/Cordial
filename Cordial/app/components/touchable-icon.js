@@ -9,15 +9,21 @@ const styles = StyleSheet.create({
 	icon: {
 		backgroundColor: white,
 		borderWidth: 0,
-		borderRadius: 4
+		borderRadius: 4,
+		justifyContent: 'center',
+		alignItems: 'center'
 	}
 });
 
 export class Icon extends Component {
 	render() {
 		let {name, size, color} = this.props;
-		if (!color && Icons[name]) {
-			color = Icons[name].color;
+
+		if (Icons[name]) {
+			if (!color) {
+				color = Icons[name].color;
+			}
+			size *= Icons[name].scale || 1; // scale icons to somewhat standard width
 		}
 		return (
 			<View style={[styles.icon, this.props.style]}>
