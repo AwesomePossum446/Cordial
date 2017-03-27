@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import {Icon} from '../components/touchable-icon';
 import Icons from '../consts/icons';
 import {white, brightBlue, lightBlue, paleBlue, HEADER_HEIGHT} from '../consts/styles';
+import CordialModal from '../components/cordial-modal';
 //TODO: implement custom field creation
 
 const styles = StyleSheet.create({
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
 		fontSize: 18,
 		height: 26,
 		margin: 0,
-		marginTop: 5,
+		marginBottom: 10,
 		paddingVertical: 1,
 		paddingHorizontal: 5,
 		marginHorizontal: 20,
@@ -134,38 +135,27 @@ class FieldPicker extends Component {
 					justifyContent: 'flex-start',
 				}}
 			>
-				<Modal
-					animationType={'slide'}
-					transparent={true}
+				<CordialModal
 					visible={this.state.modalVisible}
-					onRequestClose={()=>{alert('Modal has been closed.');}}
-					>
-						<View style={styles.modal}>
-							<View style={{backgroundColor: lightBlue, borderColor: brightBlue, borderWidth: 10}}>
-								<View style={{alignItems: 'center'}}>
-									<Text style={styles.modalTitle}>Custom Field</Text>
-									<Text style={styles.modalDescription}>Enter the name of your custom field</Text>
-									<TextInput
-										style={styles.textField}
-										value={this.state.input}
-										onChangeText={this.onFieldChange}
-										underlineColorAndroid='transparent'
-									/>
-									<View style={styles.buttonRow}>
-										<TouchableOpacity onPress={() => {this.setModalVisible(!this.state.modalVisible);}}>
-											<Text style={styles.button}>Close</Text>
-										</TouchableOpacity>
-										<TouchableOpacity onPress={() => {
-											this.setModalVisible(!this.state.modalVisible);
-											this.createCustomField('info-circle', this.state.input);
-										}}>
-											<Text style={styles.button}>OK</Text>
-										</TouchableOpacity>
-									</View>
-								</View>
-							</View>
-						</View>
-					</Modal>
+					onRequestClose={() => {
+						this.setModalVisible(!this.state.modalVisible);
+						if (this.state.input !== '') {
+							this.createCustomField('info-circle', this.state.input);
+						}
+					}}
+					closeButtonText={this.state.input === '' ? 'Cancel' : 'Ok'}
+				>
+					<View style={{width: 320, height: 150, justifyContent: 'space-around', alignItems: 'center'}}>
+						<Text style={{fontSize: 30}}>Custom Field</Text>
+						<Text style={{fontSize: 20}}>Enter the name of the field</Text>
+						<TextInput
+							style={styles.textField}
+							value={this.state.input}
+							onChangeText={this.onFieldChange}
+							underlineColorAndroid='transparent'
+						/>
+					</View>
+				</CordialModal>
 				<FieldOption
 					key={0}
 					field={{
