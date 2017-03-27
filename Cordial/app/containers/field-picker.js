@@ -1,12 +1,20 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableHighlight, ScrollView, StyleSheet} from 'react-native';
+import {
+	View,
+	Text,
+	TextInput,
+	TouchableHighlight,
+	ScrollView,
+	StyleSheet
+} from 'react-native';
 import _ from 'lodash';
 import {Actions} from 'react-native-router-flux';
 import { connect } from 'react-redux';
 
 import {Icon} from '../components/touchable-icon';
 import Icons from '../consts/icons';
-import {brightBlue, paleBlue, HEADER_HEIGHT} from '../consts/styles';
+import filter from '../utils/filter';
+import {brightBlue, paleBlue, lightBlue, HEADER_HEIGHT} from '../consts/styles';
 //TODO: implement custom field creation
 
 const styles = StyleSheet.create({
@@ -22,7 +30,25 @@ const styles = StyleSheet.create({
 	},
 	fieldOptionChild: {
 		padding: 4
-	}
+	},
+	textInputContainer: {
+		backgroundColor: brightBlue,
+		padding: 8,
+		paddingLeft: 20,
+		paddingRight: 20,
+	},
+	textInput: {
+		backgroundColor: lightBlue,
+		height: 25,
+		fontSize: 14,
+		margin: 0,
+		padding: 2,
+		paddingLeft: 8,
+		paddingRight: 8,
+		textDecorationLine: 'none',
+		borderRadius: 5,
+		borderWidth: 0
+	},
 });
 
 const FieldOption = (props) => (
@@ -37,7 +63,16 @@ const FieldOption = (props) => (
 class FieldPicker extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			input: ''
+		};
+		this.handleSearch = this.handleSearch.bind(this);
 		this.onSelect = this.onSelect.bind(this);
+	}
+	handleSearch(text) {
+		this.setState({
+			input: text
+		});
 	}
 	onSelect({icon, displayName}) {
 		Actions.pop();
@@ -49,8 +84,9 @@ class FieldPicker extends Component {
 		});
 	}
 	render() {
-		const iconList = _.map(Icons, ({displayName}, icon) => ({icon, displayName}));
-
+		const iconList = _(filter(Icons, this.state.input))
+			.map(({displayName}, icon) => ({icon, displayName}))
+			.value();
 		return (
 			<ScrollView
 				style={{
@@ -61,6 +97,16 @@ class FieldPicker extends Component {
 					justifyContent: 'flex-start',
 				}}
 			>
+				<View style={styles.textInputContainer}>
+					<TextInput /* TODO: Add a search icon */
+						onChangeText={this.handleSearch}
+						value={this.state.input}
+						style={styles.textInput}
+						placeholder='Search'
+						numberOfLines={1}
+						underlineColorAndroid='rgba(0,0,0,0)'
+					/>
+				</View>
 				{
 					_.map(iconList, (f, i) => <FieldOption key={i} field={f} onPress={this.onSelect} />)
 				}
